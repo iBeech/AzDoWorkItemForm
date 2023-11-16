@@ -1,0 +1,76 @@
+{
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5119"
+    },    
+    "https-tombeech": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AZURE_DEVOPS_PAT": "",
+        "AZURE_DEVOPS_ORG_URL": "https://dev.azure.com/tombeech",
+        "PAGE_BACKGROUND_COLOUR": "#FBCB0F",
+        "AZURE_DEVOPS_PROJECT": "Beech Family",
+        "COMPANY_LOGO": "https://www.strunkmedia.com/wp-content/uploads/2018/05/bigstock-222496366.jpg",
+        "PAGE_TITLE": "Tom Beech - Support",
+        "WORK_ITEM_TYPE": "Customer Bug Report",
+        "FORM_TITLE": "Family Bug Report",
+        "FORM_DESCRIPTION": "Your queries will be recorded on the chase BAU Board where you can track the progress of your query",
+        "DEFAULT_AREA_PATH": "Beech Family",
+        "WORKITEM_SUBMITTED_MESSAGE": "Support Request Submitted Successfully!",
+        "TITLE": "System.Title",
+        "DESCRIPTION": "System.Description",
+        "AREA_PATH": "System.AreaPath",
+        "REQUESTER_NAME": "Custom.RequesterName",
+        "DESCRIBE_THE_BUG": "System.Description",
+        "STEPS_TO_REPRODUCE": "Custom.StepstoReproduce",
+        "EXPECTED_OUTCOME": "Custom.ExpectedOutcome",
+        "ACTUAL_OUTCOME": "Custom.ActualOutcome",
+        "ADDITIONAL_COMMENTS": "Custom.AdditionalComments",
+        "SEVERITY": "Microsoft.VSTS.Common.Severity",
+        "REPRODUCIBILITY": "Custom.Reproducibility",
+        "SYSTEM_AREA_OR_SERVICE": "Custom.SystemAreaorService",
+        "AFFECTED_FEATURE_OR_AREA": "Custom.AffectedfeatureorArea",
+        "DEVICE_MODEL_OR_BROWSER": "Custom.DeviceModelorBrowser",
+        "APP_VERSION": "Custom.AppVersion",
+        "OPERATING_SYSTEM": "Custom.OperatingSystem",
+        "NETWORK_TYPE": "Custom.NetworkType"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7188;http://localhost:5119"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "https://+:443;http://+:80"
+      },
+      "publishAllPorts": true,
+      "useSSL": true
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:37819",
+      "sslPort": 44363
+    }
+  }
+}

@@ -1,0 +1,85 @@
+﻿@model WorkItemFields
+
+<link rel="stylesheet" href="~/css/site.css" />
+
+<form asp-action="CreateWorkItem" method="post" class="work-item-form" enctype="multipart/form-data">
+    <div class="logo-container">
+        <img src="@Environment.GetEnvironmentVariable("COMPANY_LOGO")" alt="Company Logo" />
+    </div>
+
+    <h2>@ViewData["FormTitle"]</h2>
+    <p>@ViewData["FormDescription"]</p>
+
+    @await Html.PartialAsync("_FormField", Model.RequesterName)
+
+    @await Html.PartialAsync("_FormField", Model.Title)
+
+    @await Html.PartialAsync("_FormField", Model.Description)
+
+    @await Html.PartialAsync("_FormField", Model.StepsToReproduce)
+
+    @await Html.PartialAsync("_FormField", Model.ExpectedOutcome)
+
+    @await Html.PartialAsync("_FormField", Model.ActualOutcome)
+        
+    @await Html.PartialAsync("_FormField", Model.Severity)
+
+    @await Html.PartialAsync("_FormField", Model.Reproducibility)
+
+    @await Html.PartialAsync("_FormField", Model.SystemAreaOrService)
+
+    @await Html.PartialAsync("_FormField", Model.AffectedFeatureOrArea)
+
+    @await Html.PartialAsync("_FormField", Model.DeviceModelOrBrowser)
+
+    @await Html.PartialAsync("_FormField", Model.AppVersion)
+
+    @await Html.PartialAsync("_FormField", Model.OperatingSystem)
+
+    @await Html.PartialAsync("_FormField", Model.NetworkType)
+
+    <!-- Attachment container -->
+    <div class="attachment-container">
+        <label for="fileInput">Visual Aids:</label>
+        <p>Screenshots, video recordings etc</p>
+        <div class="attachment-box" onclick="openFileInput()" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+            <p>Drag and drop files here or click to select files</p>
+            <span id="fileInputLabel">Select Files</span>
+        </div>
+        <input type="file" id="fileInput" name="attachments[]" multiple onchange="displaySelectedFiles()">
+    </div>
+
+    @await Html.PartialAsync("_FormField", Model.AdditionalComments)
+
+    <button type="submit" class="btn btn-primary">Create Work Item</button>
+</form>
+
+<script>
+    function openFileInput() {
+        document.getElementById('fileInput').click();
+    }
+
+    function handleDragOver(event) {
+        event.preventDefault();
+        event.currentTarget.classList.add('drag-over');
+    }
+
+    function handleDrop(event) {
+        event.preventDefault();
+        event.currentTarget.classList.remove('drag-over');
+
+        const files = event.dataTransfer.files;
+        handleFiles(files);
+    }
+
+    function displaySelectedFiles() {
+        const input = document.getElementById('fileInput');
+        const files = input.files;
+        handleFiles(files);
+    }
+
+    function handleFiles(files) {
+        const fileInputLabel = document.getElementById('fileInputLabel');
+        fileInputLabel.textContent = `${files.length} file(s) selected`;
+    }
+</script>

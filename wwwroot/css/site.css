@@ -1,0 +1,111 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+    color: #333 !important
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.work-item-form {
+    max-width: 600px; 
+    margin: auto;
+    background-color: white;
+    border-radius: 30px 10px;
+    padding:30px;
+}
+
+.required {
+    color: red;
+    margin-left: 5px;
+}
+
+.footer {
+    background-color: white;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-control {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+textarea {
+    height: 150px;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+    .logo-container img {
+        max-height: 100px;
+    }
+
+.attachment-container {
+    margin-top: 20px;
+}
+
+.attachment-box {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    margin-bottom:20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+    .attachment-box:hover {
+        background-color: #f0f0f0;
+    }
+
+#fileInput {
+    display: none;
+}
+
+#fileInputLabel {
+    color: #007bff;
+    cursor: pointer;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 20px; 
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.github-link img {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 10px;
+}

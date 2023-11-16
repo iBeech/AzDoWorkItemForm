@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34221.43
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzDoWorkItemForm", "AzDoWorkItemForm.csproj", "{B1D319B5-1EAC-41FA-B4E2-AB46601B1475}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B1D319B5-1EAC-41FA-B4E2-AB46601B1475}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1D319B5-1EAC-41FA-B4E2-AB46601B1475}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1D319B5-1EAC-41FA-B4E2-AB46601B1475}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1D319B5-1EAC-41FA-B4E2-AB46601B1475}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1A1EF13B-6C3E-41BA-848E-7DB04AC97E87}
+	EndGlobalSection
+EndGlobal

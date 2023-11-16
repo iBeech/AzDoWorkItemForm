@@ -1,0 +1,32 @@
+﻿@using static AzDoWorkItemForm.WorkItemFields;
+@model Field
+
+@if (Model != null)
+{
+    <div class="form-group">
+        <label for="@Model.docker_variable_name">@Model.nice_name:<span class="required">*</span></label>
+        @if (!string.IsNullOrEmpty(Model.description))
+        {
+            <p>@Model.description</p>
+        }
+
+        @if (Model.isPicklist)
+        {
+            <select name="@Model.docker_variable_name" required class="form-control">
+                <option value="">Select...</option>
+                @foreach (var option in Model.Options.items)
+                {
+                    <option value="@option">@option</option>
+                }
+            </select>
+        }
+        else if (Model.type == "string")
+        {
+            <input type="text" name="@Model.docker_variable_name" required class="form-control">
+        }
+        else if (Model.type == "html")
+        {
+            <textarea name="@Model.docker_variable_name" required class="form-control"></textarea>
+        }
+    </div>
+}
