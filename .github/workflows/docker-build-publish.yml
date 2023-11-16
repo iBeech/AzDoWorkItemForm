@@ -18,7 +18,7 @@ jobs:
       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Docker Image
-      run: docker build -t ibeech/AzDoWorkItemForm:latest .
+      run: docker build -t ibeech/azdoworkitemform:latest .
       
     - name: Push Docker Image
-      run: docker push ibeech/AzDoWorkItemForm:latest
+      run: docker push ibeech/azdoworkitemform:latest
