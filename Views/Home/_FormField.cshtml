@@ -4,7 +4,7 @@
 @if (Model != null)
 {
     <div class="form-group">
-        <label for="@Model.docker_variable_name">@Model.nice_name:<span class="required">*</span></label>
+        <label for="@Model.docker_variable_name">@Model.name:<span class="required">*</span></label>
         @if (!string.IsNullOrEmpty(Model.description))
         {
             <p>@Model.description</p>

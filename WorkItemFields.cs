@@ -12,23 +12,21 @@ namespace AzDoWorkItemForm
     {
         private readonly Dictionary<string, Field> _allFields;
 
-        public Field Title { get; private set; }
-        public Field Description { get; private set; }
-        public Field AreaPath { get; private set; }
-        public Field RequesterName { get; private set; }
-        public Field StepsToReproduce { get; private set; }
-        public Field ExpectedOutcome { get; private set; }
-        public Field ActualOutcome { get; private set; }
-        public Field AdditionalComments { get; private set; }
-        public Field Severity { get; private set; }
-        public Field Reproducibility { get; private set; }
-        public Field SystemAreaOrService { get; private set; }
-        public Field AffectedFeatureOrArea { get; private set; }
-        public Field DeviceModelOrBrowser { get; private set; }
-        public Field AppVersion { get; private set; }
-        public Field OperatingSystem { get; private set; }
-        public Field NetworkType { get; private set; }
-        // Add more fields as needed...
+        public Field FIELD_1 { get; private set; }
+        public Field FIELD_2{ get; private set; }
+        public Field FIELD_3 { get; private set; }
+        public Field FIELD_4 { get; private set; }
+        public Field FIELD_5 { get; }
+        public Field FIELD_6 { get; }
+        public Field FIELD_7 { get; }
+        public Field FIELD_8 { get; }
+        public Field FIELD_9 { get; private set; }
+        public Field FIELD_10 { get; private set; }
+        public Field FIELD_11 { get; private set; }
+        public Field FIELD_12 { get; private set; }
+        public Field FIELD_13 { get; private set; }
+        public Field FIELD_14 { get; private set; }
+        public Field FIELD_15 { get; private set; }
 
         public WorkItemFields()
         {
@@ -36,22 +34,21 @@ namespace AzDoWorkItemForm
             _allFields = GetAllFieldsAsync().GetAwaiter().GetResult(); 
 
             // Attempt to locate all fiends as requested in docker variables
-            Title = GetFieldDetails("TITLE");
-            Description = GetFieldDetails("DESCRIPTION");
-            AreaPath = GetFieldDetails("AREA_PATH");
-            RequesterName = GetFieldDetails("REQUESTER_NAME");           
-            StepsToReproduce = GetFieldDetails("STEPS_TO_REPRODUCE");
-            ExpectedOutcome = GetFieldDetails("EXPECTED_OUTCOME");
-            ActualOutcome = GetFieldDetails("ACTUAL_OUTCOME");
-            AdditionalComments = GetFieldDetails("ADDITIONAL_COMMENTS");
-//          Severity = GetFieldDetails("SEVERITY");
-            Reproducibility = GetFieldDetails("REPRODUCIBILITY");
-            SystemAreaOrService = GetFieldDetails("SYSTEM_AREA_OR_SERVICE");
-            AffectedFeatureOrArea = GetFieldDetails("AFFECTED_FEATURE_OR_AREA");
-            DeviceModelOrBrowser = GetFieldDetails("DEVICE_MODEL_OR_BROWSER");
-            AppVersion = GetFieldDetails("APP_VERSION");
-            OperatingSystem = GetFieldDetails("OPERATING_SYSTEM");
-            NetworkType = GetFieldDetails("NETWORK_TYPE");
+            FIELD_1 = GetFieldDetails("FIELD_1");
+            FIELD_2 = GetFieldDetails("FIELD_2");
+            FIELD_3 = GetFieldDetails("FIELD_3");
+            FIELD_4 = GetFieldDetails("FIELD_4");           
+            FIELD_5 = GetFieldDetails("FIELD_5");
+            FIELD_6 = GetFieldDetails("FIELD_6");
+            FIELD_7 = GetFieldDetails("FIELD_7");
+            FIELD_8 = GetFieldDetails("FIELD_8");
+            FIELD_9 = GetFieldDetails("FIELD_9");
+            FIELD_10 = GetFieldDetails("FIELD_10");
+            FIELD_11 = GetFieldDetails("FIELD_11");
+            FIELD_12 = GetFieldDetails("FIELD_12");
+            FIELD_13 = GetFieldDetails("FIELD_13");
+            FIELD_14 = GetFieldDetails("FIELD_14");
+            FIELD_15 = GetFieldDetails("FIELD_15");
         }
 
         private async Task<Dictionary<string, Field>> GetAllFieldsAsync()
@@ -97,16 +94,22 @@ namespace AzDoWorkItemForm
 
         private Field GetFieldDetails(string fieldName)
         {
-            var resolvedFieldName = Environment.GetEnvironmentVariable(fieldName);
+            var resolvedFieldData = Environment.GetEnvironmentVariable(fieldName);
 
             // Check if there was a variable defined
-            if (resolvedFieldName == null) return null;
+            if (resolvedFieldData == null) return null;
+
+            var fieldInfo = resolvedFieldData.Split(',');
 
             // Look up the requested field reference name
-            var result = _allFields.TryGetValue(resolvedFieldName.ToLowerInvariant(), out var field) ? field : null;
-            
+            var result = _allFields.TryGetValue(fieldInfo[1].Trim().ToLowerInvariant(), out var field) ? field : null;
+
             // If we found it, update the field from AzDo to add in the docker variable name for future reference
-            if (result != null) result.docker_variable_name = fieldName;
+            if (result != null)
+            {
+                result.name = fieldInfo[0].Trim();
+                result.docker_variable_name = fieldName;
+            }
 
             return result;
         }
@@ -115,13 +118,6 @@ namespace AzDoWorkItemForm
         {
             public string docker_variable_name { get; set; }
             public string name { get; set; }
-            public string nice_name
-            {
-                get
-                {
-                    return AddSpaceBeforeCapitalLetters(name ?? "");
-                }
-            }
             public string referenceName { get; set; }
             public string description { get; set; }
             public string type { get; set; }

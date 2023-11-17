@@ -10,33 +10,35 @@
     <h2>@ViewData["FormTitle"]</h2>
     <p>@ViewData["FormDescription"]</p>
 
-    @await Html.PartialAsync("_FormField", Model.RequesterName)
+    @await Html.PartialAsync("_FormField", Model.FIELD_1)
 
-    @await Html.PartialAsync("_FormField", Model.Title)
+    @await Html.PartialAsync("_FormField", Model.FIELD_2)
 
-    @await Html.PartialAsync("_FormField", Model.Description)
+    @await Html.PartialAsync("_FormField", Model.FIELD_3)
 
-    @await Html.PartialAsync("_FormField", Model.StepsToReproduce)
+    @await Html.PartialAsync("_FormField", Model.FIELD_4)
 
-    @await Html.PartialAsync("_FormField", Model.ExpectedOutcome)
+    @await Html.PartialAsync("_FormField", Model.FIELD_5)
 
-    @await Html.PartialAsync("_FormField", Model.ActualOutcome)
+    @await Html.PartialAsync("_FormField", Model.FIELD_6)
         
-    @await Html.PartialAsync("_FormField", Model.Severity)
+    @await Html.PartialAsync("_FormField", Model.FIELD_7)
 
-    @await Html.PartialAsync("_FormField", Model.Reproducibility)
+    @await Html.PartialAsync("_FormField", Model.FIELD_8)
 
-    @await Html.PartialAsync("_FormField", Model.SystemAreaOrService)
+    @await Html.PartialAsync("_FormField", Model.FIELD_9)
 
-    @await Html.PartialAsync("_FormField", Model.AffectedFeatureOrArea)
+    @await Html.PartialAsync("_FormField", Model.FIELD_10)
 
-    @await Html.PartialAsync("_FormField", Model.DeviceModelOrBrowser)
+    @await Html.PartialAsync("_FormField", Model.FIELD_11)
 
-    @await Html.PartialAsync("_FormField", Model.AppVersion)
+    @await Html.PartialAsync("_FormField", Model.FIELD_12)
 
-    @await Html.PartialAsync("_FormField", Model.OperatingSystem)
+    @await Html.PartialAsync("_FormField", Model.FIELD_13)
+    
+    @await Html.PartialAsync("_FormField", Model.FIELD_14)
 
-    @await Html.PartialAsync("_FormField", Model.NetworkType)
+    @await Html.PartialAsync("_FormField", Model.FIELD_15)
 
     <!-- Attachment container -->
     <div class="attachment-container">
@@ -48,8 +50,6 @@
         </div>
         <input type="file" id="fileInput" name="attachments[]" multiple onchange="displaySelectedFiles()">
     </div>
-
-    @await Html.PartialAsync("_FormField", Model.AdditionalComments)
 
     <button type="submit" class="btn btn-primary">Create Work Item</button>
 </form>

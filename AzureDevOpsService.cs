@@ -44,7 +44,7 @@ namespace AzDoWorkItemForm
                 patchDocument.Add(new JsonPatchOperation()
                 {
                     Operation = Operation.Add,
-                    Path = $"/fields/{Environment.GetEnvironmentVariable(item.Key)}",
+                    Path = $"/fields/{Environment.GetEnvironmentVariable(item.Key).Split(',')[1].Trim()}",
                     Value = System.Net.WebUtility.HtmlDecode(item.Value)
                 });
             }
