@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Cors;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -27,11 +28,15 @@ namespace AzDoWorkItemForm
         public Field FIELD_13 { get; private set; }
         public Field FIELD_14 { get; private set; }
         public Field FIELD_15 { get; private set; }
+        public bool EnableAttachments { get; private set; }
 
         public WorkItemFields()
         {
             // Cache all field info
-            _allFields = GetAllFieldsAsync().GetAwaiter().GetResult(); 
+            _allFields = GetAllFieldsAsync().GetAwaiter().GetResult();
+
+            // Capture if the user wants to allow uploading attachments
+            EnableAttachments = bool.TryParse(Environment.GetEnvironmentVariable("ENABLE_ATTACHMENTS"), out var enableAttachments) && enableAttachments;
 
             // Attempt to locate all fiends as requested in docker variables
             FIELD_1 = GetFieldDetails("FIELD_1");
@@ -109,6 +114,23 @@ namespace AzDoWorkItemForm
             {
                 result.name = fieldInfo[0].Trim();
                 result.docker_variable_name = fieldName;
+
+                // If the configuration overrides the fields description, store it
+                if(fieldInfo.Length > 2)
+                {
+                    result.description = fieldInfo[2].Trim();
+
+                    // Check if the user configured the description to be hidden
+                    // Useful if the user does not want the description in Azure DevOps 
+                    // to be changed, but it doesnt sit right in the form, and they
+                    // don't want a description, as it may be self explanitory
+                    if(result.description.Equals("hide", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        result.description = string.Empty;
+                    }
+                }
+
+                
             }
 
             return result;

@@ -21,7 +21,7 @@
     @await Html.PartialAsync("_FormField", Model.FIELD_5)
 
     @await Html.PartialAsync("_FormField", Model.FIELD_6)
-        
+
     @await Html.PartialAsync("_FormField", Model.FIELD_7)
 
     @await Html.PartialAsync("_FormField", Model.FIELD_8)
@@ -35,21 +35,24 @@
     @await Html.PartialAsync("_FormField", Model.FIELD_12)
 
     @await Html.PartialAsync("_FormField", Model.FIELD_13)
-    
+
     @await Html.PartialAsync("_FormField", Model.FIELD_14)
 
     @await Html.PartialAsync("_FormField", Model.FIELD_15)
 
-    <!-- Attachment container -->
-    <div class="attachment-container">
-        <label for="fileInput">Visual Aids:</label>
-        <p>Screenshots, video recordings etc</p>
-        <div class="attachment-box" onclick="openFileInput()" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-            <p>Drag and drop files here or click to select files</p>
-            <span id="fileInputLabel">Select Files</span>
+    @if (Model.EnableAttachments)
+    {
+        <!-- Attachment container -->
+        <div class="attachment-container">
+            <label for="fileInput">Visual Aids:</label>
+            <p>Screenshots, video recordings etc</p>
+            <div class="attachment-box" onclick="openFileInput()" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                <p>Drag and drop files here or click to select files</p>
+                <span id="fileInputLabel">Select Files</span>
+            </div>
+            <input type="file" id="fileInput" name="attachments[]" multiple onchange="displaySelectedFiles()">
         </div>
-        <input type="file" id="fileInput" name="attachments[]" multiple onchange="displaySelectedFiles()">
-    </div>
+    }
 
     <button type="submit" class="btn btn-primary">Create Work Item</button>
 </form>
