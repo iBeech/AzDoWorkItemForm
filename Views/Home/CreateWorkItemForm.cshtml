@@ -10,35 +10,16 @@
     <h2>@ViewData["FormTitle"]</h2>
     <p>@ViewData["FormDescription"]</p>
 
-    @await Html.PartialAsync("_FormField", Model.FIELD_1)
-
-    @await Html.PartialAsync("_FormField", Model.FIELD_2)
-
-    @await Html.PartialAsync("_FormField", Model.FIELD_3)
-
-    @await Html.PartialAsync("_FormField", Model.FIELD_4)
-
-    @await Html.PartialAsync("_FormField", Model.FIELD_5)
-
-    @await Html.PartialAsync("_FormField", Model.FIELD_6)
-
-    @await Html.PartialAsync("_FormField", Model.FIELD_7)
-
-    @await Html.PartialAsync("_FormField", Model.FIELD_8)
-
-    @await Html.PartialAsync("_FormField", Model.FIELD_9)
-
-    @await Html.PartialAsync("_FormField", Model.FIELD_10)
-
-    @await Html.PartialAsync("_FormField", Model.FIELD_11)
-
-    @await Html.PartialAsync("_FormField", Model.FIELD_12)
-
-    @await Html.PartialAsync("_FormField", Model.FIELD_13)
-
-    @await Html.PartialAsync("_FormField", Model.FIELD_14)
-
-    @await Html.PartialAsync("_FormField", Model.FIELD_15)
+    @{
+        for (var i = 1; i < 15; i++)
+        {
+            var currentField = Model.AllFields["FIELD_" + i];
+            if (currentField != null)
+            {
+                @await Html.PartialAsync("_FormField", currentField)
+            }
+        }
+    }
 
     @if (Model.EnableAttachments)
     {
@@ -57,6 +38,7 @@
     <button type="submit" class="btn btn-primary">Create Work Item</button>
 </form>
 
+<!-- JavaScript for handling drag and drop -->
 <script>
     function openFileInput() {
         document.getElementById('fileInput').click();
@@ -86,3 +68,38 @@
         fileInputLabel.textContent = `${files.length} file(s) selected`;
     }
 </script>
+
+<!-- JavaScript for handling tip dialogs -->
+<script>
+    function handleSelectChange(fieldName, selectElement) {
+        var selectedIndex = selectElement.selectedIndex;
+        var selectedOption = selectElement.options[selectedIndex];
+        var tipValue = selectedOption.getAttribute('data-tip');
+
+        if (tipValue !== null) {
+            // Display Bootstrap modal with the tip value
+            $('#myModal').modal('show');
+            // Set the modal title
+            $('#myModal .modal-title').html(fieldName + ' Tip!');
+            // Set the modal content
+            $('#myModal .modal-body').html(tipValue);
+        }
+    }
+</script>
+
+<!-- Bootstrap Tip Modal Dialog -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tip Information</h5>
+            </div>
+            <div class="modal-body">
+                <!-- Tip Content -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

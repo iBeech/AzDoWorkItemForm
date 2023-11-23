@@ -1,4 +1,5 @@
-﻿@using static AzDoWorkItemForm.WorkItemFields;
+﻿@using Newtonsoft.Json;
+@using static AzDoWorkItemForm.WorkItemFields;
 @model Field
 
 @if (Model != null)
@@ -12,11 +13,21 @@
 
         @if (Model.isPicklist)
         {
-            <select name="@Model.docker_variable_name" required class="form-control">
+            // When the option changes, show any tips for the selected option
+            <select name="@Model.docker_variable_name" required class="form-control" onchange="handleSelectChange('@Model.name', this)">
                 <option value="">Select...</option>
                 @foreach (var option in Model.Options.items)
                 {
-                    <option value="@option">@option</option>
+                    var tip = Model.Tips.FirstOrDefault(t => t.Key == option);
+                    if(tip.Key == default) // If there is no tip, just write out the option
+                    {
+                        <option value="@option">@option</option>
+                    }
+                    else // If there is a tip, store it in data-tip
+                    {
+                        <option value="@option" data-tip=@Html.Encode(tip.Value)>@option</option>
+                    }
+
                 }
             </select>
         }

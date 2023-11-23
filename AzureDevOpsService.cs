@@ -27,6 +27,10 @@ namespace AzDoWorkItemForm
 
         public async Task<WorkItem> CreateWorkItemAsync(IFormCollection form, string workItemType)
         {
+            // Load in fields from variables. We will use this later
+            // to look up 
+            var fields = new WorkItemFields();
+
             VssConnection connection = new VssConnection(new Uri(_organizationUrl), new VssBasicCredential(string.Empty, _personalAccessToken));
 
             WorkItemTrackingHttpClient witClient = connection.GetClient<WorkItemTrackingHttpClient>();
@@ -40,11 +44,14 @@ namespace AzDoWorkItemForm
                     // We will upload attachments after the work item is created
                     continue;
                 }
-                
+
+                var fieldName = Environment.GetEnvironmentVariable(item.Key).Split(',')[1].Trim();
+                //fields.
+
                 patchDocument.Add(new JsonPatchOperation()
                 {
                     Operation = Operation.Add,
-                    Path = $"/fields/{Environment.GetEnvironmentVariable(item.Key).Split(',')[1].Trim()}",
+                    Path = $"/fields/{fieldName}",
                     Value = System.Net.WebUtility.HtmlDecode(item.Value)
                 });
             }

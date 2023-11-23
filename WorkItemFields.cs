@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -11,49 +12,45 @@ namespace AzDoWorkItemForm
 {
     public class WorkItemFields
     {
-        private readonly Dictionary<string, Field> _allFields;
+        public readonly Dictionary<string, Field> AllFields;
 
-        public Field FIELD_1 { get; private set; }
-        public Field FIELD_2{ get; private set; }
-        public Field FIELD_3 { get; private set; }
-        public Field FIELD_4 { get; private set; }
-        public Field FIELD_5 { get; }
-        public Field FIELD_6 { get; }
-        public Field FIELD_7 { get; }
-        public Field FIELD_8 { get; }
-        public Field FIELD_9 { get; private set; }
-        public Field FIELD_10 { get; private set; }
-        public Field FIELD_11 { get; private set; }
-        public Field FIELD_12 { get; private set; }
-        public Field FIELD_13 { get; private set; }
-        public Field FIELD_14 { get; private set; }
-        public Field FIELD_15 { get; private set; }
         public bool EnableAttachments { get; private set; }
+        public WorkItem CreatedWorkItem { get; set; }
 
         public WorkItemFields()
         {
-            // Cache all field info
-            _allFields = GetAllFieldsAsync().GetAwaiter().GetResult();
+            // Cache all field info from Azure DevOps
+            AllFields = GetAllFieldsAsync().GetAwaiter().GetResult();
+
+            // Go through each docker variable and try to match it with a field from Azure DevOps
+            for (var i = 1; i < 15; i++)
+            {
+                var fieldName = $"FIELD_{i}";
+                UpdateFieldDetails(fieldName);
+            }
+
+            // Filter out all fields that are not relevant
+            // and update the key to be the docker_variable_name
+            AllFields = AllFields
+                   .Where(pair => !string.IsNullOrEmpty(pair.Value.docker_variable_name))
+                   .OrderBy(pair => ExtractNumericValue(pair.Key))
+                   .ToDictionary(pair => pair.Value.docker_variable_name, pair => pair.Value);
 
             // Capture if the user wants to allow uploading attachments
             EnableAttachments = bool.TryParse(Environment.GetEnvironmentVariable("ENABLE_ATTACHMENTS"), out var enableAttachments) && enableAttachments;
-
-            // Attempt to locate all fiends as requested in docker variables
-            FIELD_1 = GetFieldDetails("FIELD_1");
-            FIELD_2 = GetFieldDetails("FIELD_2");
-            FIELD_3 = GetFieldDetails("FIELD_3");
-            FIELD_4 = GetFieldDetails("FIELD_4");           
-            FIELD_5 = GetFieldDetails("FIELD_5");
-            FIELD_6 = GetFieldDetails("FIELD_6");
-            FIELD_7 = GetFieldDetails("FIELD_7");
-            FIELD_8 = GetFieldDetails("FIELD_8");
-            FIELD_9 = GetFieldDetails("FIELD_9");
-            FIELD_10 = GetFieldDetails("FIELD_10");
-            FIELD_11 = GetFieldDetails("FIELD_11");
-            FIELD_12 = GetFieldDetails("FIELD_12");
-            FIELD_13 = GetFieldDetails("FIELD_13");
-            FIELD_14 = GetFieldDetails("FIELD_14");
-            FIELD_15 = GetFieldDetails("FIELD_15");
+        }
+        private int ExtractNumericValue(string key)
+        {
+            // Assuming the key is in the format "FIELD_X"
+            string numericPart = key.Substring("FIELD_".Length);
+            if (int.TryParse(numericPart, out int numericValue))
+            {
+                return numericValue;
+            }
+            else
+            {
+                return int.MaxValue; // Put keys without numeric values at the end
+            }
         }
 
         private async Task<Dictionary<string, Field>> GetAllFieldsAsync()
@@ -97,68 +94,73 @@ namespace AzDoWorkItemForm
             }
         }
 
-        private Field GetFieldDetails(string fieldName)
+        private void UpdateFieldDetails(string fieldName)
         {
             var resolvedFieldData = Environment.GetEnvironmentVariable(fieldName);
 
             // Check if there was a variable defined
-            if (resolvedFieldData == null) return null;
+            if (resolvedFieldData == null) return;
 
             var fieldInfo = resolvedFieldData.Split(',');
 
             // Look up the requested field reference name
-            var result = _allFields.TryGetValue(fieldInfo[1].Trim().ToLowerInvariant(), out var field) ? field : null;
+            var result = AllFields.TryGetValue(fieldInfo[1].Trim().ToLowerInvariant(), out var field) ? field : null;
 
-            // If we found it, update the field from AzDo to add in the docker variable name for future reference
-            if (result != null)
+            // No field found in Azure DevOps which matches
+            if (result == null)
             {
-                result.name = fieldInfo[0].Trim();
-                result.docker_variable_name = fieldName;
-
-                // If the configuration overrides the fields description, store it
-                if(fieldInfo.Length > 2)
-                {
-                    result.description = fieldInfo[2].Trim();
-
-                    // Check if the user configured the description to be hidden
-                    // Useful if the user does not want the description in Azure DevOps 
-                    // to be changed, but it doesnt sit right in the form, and they
-                    // don't want a description, as it may be self explanitory
-                    if(result.description.Equals("hide", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        result.description = string.Empty;
-                    }
-                }
-
-                
+                Console.WriteLine($"Unable to find field {fieldName} in Azure DevOps");
             }
 
-            return result;
+            // Update the field from AzDo to add in the docker variable name for future reference
+            result.name = fieldInfo[0].Trim();
+            result.docker_variable_name = fieldName;
+
+            // If the configuration overrides the fields description, store it
+            if (fieldInfo.Length > 2)
+            {
+                result.description = fieldInfo[2].Trim();
+
+                // Check if the user configured the description to be hidden
+                // Useful if the user does not want the description in Azure DevOps 
+                // to be changed, but it doesnt sit right in the form, and they
+                // don't want a description, as it may be self explanitory
+                if (result.description.Equals("hide", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    result.description = string.Empty;
+                }
+            }
+
+            // Read in any tips to be displayed post creation
+            result.Tips = ReadFieldTips(fieldName);
         }
 
-        public class Field
+        private Dictionary<string, string> ReadFieldTips(string fieldName)
         {
-            public string docker_variable_name { get; set; }
-            public string name { get; set; }
-            public string referenceName { get; set; }
-            public string description { get; set; }
-            public string type { get; set; }
-            public string usage { get; set; }
-            public bool isPicklist { get; set; }
-            public PickListOptions Options { get; set; }
-            public bool isPicklistSuggested { get; set; }
-            public string picklistId { get; set; }
-            public string url { get; set; }
+            var fieldTipName = $"{fieldName}_TIPS";
+            var fieldTips = Environment.GetEnvironmentVariable(fieldTipName);
+
+            // If no tips were defined, return an empty dictionary
+            if (string.IsNullOrEmpty(fieldTips)) return new Dictionary<string, string>();
+
+            return ExtractTips(fieldTips);
         }
 
-        public class FieldsResponse
+        public static Dictionary<string, string> ExtractTips(string fieldTips)
         {
-            public List<Field> value { get; set; }
-        }
+            Dictionary<string, string> tips = new Dictionary<string, string>();
 
-        public class PickListOptions
-        {
-            public List<string> items { get; set; }
+            // Split out each tip and tripm excess
+            foreach (var tip in fieldTips.Split(",").Select(tip => tip.Trim()))
+            {
+                // Split the option name and the tip
+                var tipSections = tip.Split(':').Select(tip => tip.Trim()).ToList();
+
+                // Add this tip
+                tips.Add(tipSections[0], tipSections[1]);
+            }
+
+            return tips;
         }
 
         private static string AddSpaceBeforeCapitalLetters(string input)
@@ -183,5 +185,31 @@ namespace AzDoWorkItemForm
 
             return result.ToString();
         }
+    }
+    public class Field
+    {
+        public string docker_variable_name { get; set; }
+        public string name { get; set; }
+        public string referenceName { get; set; }
+        public string description { get; set; }
+        public string type { get; set; }
+        public string usage { get; set; }
+        public bool isPicklist { get; set; }
+        public PickListOptions Options { get; set; }
+        public bool isPicklistSuggested { get; set; }
+        public string picklistId { get; set; }
+        public string url { get; set; }
+        public Dictionary<string, string> Tips { get; set; }
+        public WorkItem ResultingWorkItem { get; set; }
+    }
+
+    public class FieldsResponse
+    {
+        public List<Field> value { get; set; }
+    }
+
+    public class PickListOptions
+    {
+        public List<string> items { get; set; }
     }
 }

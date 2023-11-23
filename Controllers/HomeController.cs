@@ -33,7 +33,14 @@ public class HomeController : Controller
         
         // Create the work item
         var workItem = await azureDevOpsService.CreateWorkItemAsync(form, workItemType);
+        
+        
+        
+        var fields = new WorkItemFields()
+        {
+            CreatedWorkItem = workItem
+        };
 
         // Render a view or redirect as needed
-        return View("WorkItemCreated", workItem);
+        return View("WorkItemCreated", fields);
     }}
