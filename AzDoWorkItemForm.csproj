@@ -11,8 +11,17 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.VisualStudio.Services.Client" Version="16.0.0" />
-		<PackageReference Include="Microsoft.TeamFoundationServer.Client"  Version="16.0.0" />
-		<PackageReference Include="Microsoft.TeamFoundationServer.ExtendedClient"  Version="16.0.0" />
+		<PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="16.0.0" />
+		<PackageReference Include="Microsoft.TeamFoundationServer.ExtendedClient" Version="16.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Update="configuration.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Update="configuration-blank.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
 </Project>

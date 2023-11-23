@@ -14,44 +14,38 @@ namespace AzDoWorkItemForm
 {
     public class AzureDevOpsService
     {
-        private readonly string _personalAccessToken;
-        private readonly string _organizationUrl;
-        private readonly string _project;
+        private readonly Configuration _config;
 
-        public AzureDevOpsService(string personalAccessToken, string organizationUrl, string project)
+        public AzureDevOpsService()
         {
-            this._personalAccessToken = personalAccessToken;
-            this._organizationUrl = organizationUrl;
-            this._project = project;
+            _config = Configuration.LoadConfiguration(false);
         }
 
-        public async Task<WorkItem> CreateWorkItemAsync(IFormCollection form, string workItemType)
+        public AzureDevOpsService(Configuration config)
         {
-            // Load in fields from variables. We will use this later
-            // to look up 
-            var fields = new WorkItemFields();
+            _config = config;
+        }
 
-            VssConnection connection = new VssConnection(new Uri(_organizationUrl), new VssBasicCredential(string.Empty, _personalAccessToken));
+        public async Task<WorkItem> CreateWorkItemAsync(IFormCollection form, Form originalForm)
+        {
+            VssConnection connection = new VssConnection(new Uri(_config.AZURE_DEVOPS_ORG_URL), new VssBasicCredential(string.Empty, _config.AZURE_DEVOPS_PAT));
 
             WorkItemTrackingHttpClient witClient = connection.GetClient<WorkItemTrackingHttpClient>();
 
             JsonPatchDocument patchDocument = new JsonPatchDocument();
 
-            foreach(var item in form)
+            foreach (var item in form)
             {
-                if(item.Key == "attachments[]" || item.Key == "__RequestVerificationToken")
+                if (item.Key == "attachments[]" || item.Key == "__RequestVerificationToken" || item.Key == "FormTitle")
                 {
                     // We will upload attachments after the work item is created
                     continue;
                 }
 
-                var fieldName = Environment.GetEnvironmentVariable(item.Key).Split(',')[1].Trim();
-                //fields.
-
                 patchDocument.Add(new JsonPatchOperation()
                 {
                     Operation = Operation.Add,
-                    Path = $"/fields/{fieldName}",
+                    Path = $"/fields/{item.Key}",
                     Value = System.Net.WebUtility.HtmlDecode(item.Value)
                 });
             }
@@ -65,11 +59,18 @@ namespace AzDoWorkItemForm
             });
 
             // Create the work item
-            var workItem = await witClient.CreateWorkItemAsync(patchDocument, _project, workItemType);
+            var workItem = await witClient.CreateWorkItemAsync(patchDocument, originalForm.AZURE_DEVOPS_PROJECT, originalForm.WORK_ITEM_TYPE);
 
             var attachments = (List<IFormFile>)form.Files;
             if (attachments == null) return workItem;
+            
+            await UploadAttachmentAsync(workItem, attachments);
 
+            return workItem;
+        }
+
+        private async Task UploadAttachmentAsync(WorkItem workItem, List<IFormFile> attachments)
+        {
             // Upload attachments if available
             if (attachments != null && attachments.Count > 0)
             {
@@ -92,14 +93,12 @@ namespace AzDoWorkItemForm
                         {
                             rel = "AttachedFile",
                             url = attachmentUrl,
-                            attributes = new { comment = "Uploaded from Support Form" } 
+                            attributes = new { comment = "Uploaded from Support Form" }
                         }
                     }
                 });
                 }
             }
-
-            return workItem;
         }
 
         private async Task<string?> UploadAttachmentAsync(int workItemId, IFormFile attachment)
@@ -108,7 +107,7 @@ namespace AzDoWorkItemForm
             {
                 // Set up the request
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/octet-stream"));
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($":{_personalAccessToken}")));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($":{_config.AZURE_DEVOPS_PAT}")));
 
                 // Get the stream from the attachment
                 using (var stream = attachment.OpenReadStream())
@@ -123,7 +122,7 @@ namespace AzDoWorkItemForm
 
                     // Escape and upload the attachement to Azure DevOps
                     var escapedFileName = Uri.EscapeDataString(attachment.FileName);
-                    var response = await client.PostAsync($"{_organizationUrl}/{_project}/_apis/wit/attachments?fileName={escapedFileName}&api-version=7.1", content);
+                    var response = await client.PostAsync($"{_config.AZURE_DEVOPS_ORG_URL}/PROJECTHERE/_apis/wit/attachments?fileName={escapedFileName}&api-version=7.1", content);
 
                     // Check for a successful response
                     response.EnsureSuccessStatusCode();
@@ -141,7 +140,7 @@ namespace AzDoWorkItemForm
 
         private async Task UpdateWorkItemAsync(int workItemId, JsonPatchDocument patchDocument)
         {
-            using (var connection = new VssConnection(new Uri(_organizationUrl), new VssBasicCredential(string.Empty, _personalAccessToken)))
+            using (var connection = new VssConnection(new Uri(_config.AZURE_DEVOPS_ORG_URL), new VssBasicCredential(string.Empty, _config.AZURE_DEVOPS_PAT)))
             {
                 var workItemTrackingHttpClient = connection.GetClient<WorkItemTrackingHttpClient>();
                 await workItemTrackingHttpClient.UpdateWorkItemAsync(patchDocument, workItemId, bypassRules: false);

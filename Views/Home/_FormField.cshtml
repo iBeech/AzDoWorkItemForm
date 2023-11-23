@@ -1,43 +1,44 @@
 ﻿@using Newtonsoft.Json;
-@using static AzDoWorkItemForm.WorkItemFields;
 @model Field
 
 @if (Model != null)
 {
     <div class="form-group">
-        <label for="@Model.docker_variable_name">@Model.name:<span class="required">*</span></label>
-        @if (!string.IsNullOrEmpty(Model.description))
+        <label for="@Model.FieldName">@Model.Name:<span class="required">*</span></label>
+        @if (!string.IsNullOrEmpty(Model.Description))
         {
-            <p>@Model.description</p>
+            <p>@Model.Description</p>
         }
 
-        @if (Model.isPicklist)
+        @if (Model.AzDoField.isPicklist)
         {
             // When the option changes, show any tips for the selected option
-            <select name="@Model.docker_variable_name" required class="form-control" onchange="handleSelectChange('@Model.name', this)">
+            <select name="@Model.FieldName" required class="form-control" onchange="handleSelectChange('@Model.Name', this)">
                 <option value="">Select...</option>
-                @foreach (var option in Model.Options.items)
+                @foreach (var option in Model.AzDoField.Options.items)
                 {
-                    var tip = Model.Tips.FirstOrDefault(t => t.Key == option);
-                    if(tip.Key == default) // If there is no tip, just write out the option
+                    var tip = (Model.Tips == null) ?
+                        null : // There are no tips for this option
+                        Model.Tips.FirstOrDefault(t => t.Option == option); // There are some tips, try to match a tip to this option
+                    if (tip == null) // If there is no tip, just write out the option
                     {
                         <option value="@option">@option</option>
                     }
                     else // If there is a tip, store it in data-tip
                     {
-                        <option value="@option" data-tip=@Html.Encode(tip.Value)>@option</option>
+                        <option value="@option" data-tip=@Html.Encode(tip.TipText)>@option</option>
                     }
 
                 }
             </select>
         }
-        else if (Model.type == "string")
+        else if (Model.AzDoField.type == "string")
         {
-            <input type="text" name="@Model.docker_variable_name" required class="form-control">
+            <input type="text" name="@Model.FieldName" required class="form-control">
         }
-        else if (Model.type == "html")
+        else if (Model.AzDoField.type == "html")
         {
-            <textarea name="@Model.docker_variable_name" required class="form-control"></textarea>
+            <textarea name="@Model.FieldName" required class="form-control"></textarea>
         }
     </div>
 }

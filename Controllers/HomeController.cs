@@ -5,42 +5,75 @@ using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Microsoft.VisualStudio.Services.Common;
 using Microsoft.VisualStudio.Services.WebApi;
 using AzDoWorkItemForm;
+using Microsoft.Extensions.Caching.Memory;
+
 
 public class HomeController : Controller
 {
+    private readonly IMemoryCache _cache;
+
+    public HomeController(IMemoryCache memoryCache)
+    {
+        _cache = memoryCache;
+    }
+
     public IActionResult Index()
     {
-        var fields = new WorkItemFields();
+        var config = GetOrLoadConfiguration();
+        ViewBag.BACKGROUND_COLOUR = config.BACKGROUND_COLOUR;
+        ViewBag.PAGE_TITLE = config.PAGE_TITLE;
+        ViewBag.FORMS = config.Forms;
 
-        ViewData["Title"] = Environment.GetEnvironmentVariable("PAGE_TITLE");
-        ViewData["FormTitle"] = Environment.GetEnvironmentVariable("FORM_TITLE");
-        ViewData["FormDescription"] = Environment.GetEnvironmentVariable("FORM_DESCRIPTION");
-        return View("CreateWorkItemForm", fields);
+        return View("Index", config.Forms);
+    }
+    public IActionResult Form(string name)
+    {
+        var config = GetOrLoadConfiguration();
+        ViewBag.BACKGROUND_COLOUR = config.BACKGROUND_COLOUR;
+        ViewBag.PAGE_TITLE = config.PAGE_TITLE;
+        ViewBag.FORMS = config.Forms;
+
+        return View("CreateWorkItemForm", config.Forms.Single(f => f.FORM_TITLE.ToLowerInvariant() == name.ToLowerInvariant()));
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateWorkItem(IFormCollection form)
     {
-        // Read Azure DevOps connection details from environment variables
-        string personalAccessToken = Environment.GetEnvironmentVariable("AZURE_DEVOPS_PAT");
-        string organizationUrl = Environment.GetEnvironmentVariable("AZURE_DEVOPS_ORG_URL");
-        string project = Environment.GetEnvironmentVariable("AZURE_DEVOPS_PROJECT");
-        string workItemType = Environment.GetEnvironmentVariable("WORK_ITEM_TYPE");
+        var config = GetOrLoadConfiguration();
+        ViewBag.OrganisationUrl = config.AZURE_DEVOPS_ORG_URL;
+        ViewBag.BACKGROUND_COLOUR = config.BACKGROUND_COLOUR;
+        ViewBag.PAGE_TITLE = config.PAGE_TITLE;
+        ViewBag.FORMS = config.Forms;
 
-        ViewData["OrganisationUrl"] = organizationUrl;
+        // Pull out the form we are working on so we can pick out some critical info for creating the ticket
+        var originalForm = config.Forms.Single(f => f.FORM_TITLE.ToLowerInvariant() == form["FormTitle"].ToString().ToLowerInvariant());
 
-        var azureDevOpsService = new AzureDevOpsService(personalAccessToken, organizationUrl, project);
-        
+        var azureDevOpsService = new AzureDevOpsService(config);
+
         // Create the work item
-        var workItem = await azureDevOpsService.CreateWorkItemAsync(form, workItemType);
-        
-        
-        
-        var fields = new WorkItemFields()
-        {
-            CreatedWorkItem = workItem
-        };
+        var workItem = await azureDevOpsService.CreateWorkItemAsync(form, originalForm);
+
+        config.CreatedWorkItem = workItem;
+        config.SelectedForm = originalForm;
 
         // Render a view or redirect as needed
-        return View("WorkItemCreated", fields);
-    }}
+        return View("WorkItemCreated", config);
+    }
+    private Configuration GetOrLoadConfiguration()
+    {
+        // Try to get configuration from cache
+        if (_cache.TryGetValue("Configuration", out Configuration cachedConfig))
+        {
+            return cachedConfig;
+        }
+
+        // If not in cache, load configuration and cache it
+        Configuration newConfig = Configuration.LoadConfiguration();
+        _cache.Set("Configuration", newConfig, new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10), // Set cache expiration time
+        });
+
+        return newConfig;
+    }
+}

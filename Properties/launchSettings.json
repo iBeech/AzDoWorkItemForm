@@ -9,38 +9,20 @@
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5119"
     },
+    "https-keyholding": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"        
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7188;http://localhost:5119"
+    },
     "https-tombeech": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "AZURE_DEVOPS_PAT": "",
-        "AZURE_DEVOPS_ORG_URL": "https://dev.azure.com/tombeech",
-        "AREA_PATH": "System.AreaPath",
-        "PAGE_BACKGROUND_COLOUR": "#FBCB0F",
-        "AZURE_DEVOPS_PROJECT": "Beech Family",
-        "COMPANY_LOGO": "https://www.strunkmedia.com/wp-content/uploads/2018/05/bigstock-222496366.jpg",
-        "PAGE_TITLE": "Tom Beech - Support",
-        "WORK_ITEM_TYPE": "Customer Bug Report",
-        "FORM_TITLE": "Family Bug Report",
-        "FORM_DESCRIPTION": "Your queries will be recorded on the chase BAU Board where you can track the progress of your query",
-        "DEFAULT_AREA_PATH": "Beech Family",
-        "WORKITEM_SUBMITTED_MESSAGE": "Support Request Submitted Successfully!",
-        "FIELD_1": "Chuffing Awesome Title,System.Title",
-        "FIELD_2": "Description,System.Description",
-        "FIELD_3": "Requester Name,Custom.RequesterName",
-        "FIELD_4": "Describe the Bug,System.Description",
-        "FIELD_5": "Steps to Reproduce,Custom.StepstoReproduce",
-        "FIELD_6": "Expected Outcome,Custom.ExpectedOutcome",
-        "FIELD_7": "Actual Outcome,Custom.ActualOutcome",
-        "FIELD_8": "Additional Comments,Custom.AdditionalComments",
-        "FIELD_9": "Reproducibility,Custom.Reproducibility",
-        "FIELD_10": "System Area or Service,Custom.SystemAreaorService",
-        "FIELD_11": "Affected Feature or Area,Custom.AffectedfeatureorArea",
-        "FIELD_12": "Device Model or Browser,Custom.DeviceModelorBrowser",
-        "FIELD_13": "App Version or Browser,Custom.AppVersion",
-        "FIELD_14": "Operating System,Custom.OperatingSystem",
-        "FIELD_15": "Network Type,Custom.NetworkType"
+        "ASPNETCORE_ENVIRONMENT": "Development"        
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7188;http://localhost:5119"

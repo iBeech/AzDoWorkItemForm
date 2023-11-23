@@ -1,0 +1,15 @@
+﻿@model List<Form>
+
+<div class="work-item-form">
+    <div class="logo-container">
+        <img src="@Environment.GetEnvironmentVariable("COMPANY_LOGO")" alt="Company Logo" />
+    </div>
+
+    @foreach (var form in Model)
+    {
+        <h2>@form.FORM_TITLE</h2>
+        <p>@form.FORM_DESCRIPTION</p>
+        <button type="submit" class="btn btn-primary" onclick="window.location.href='@Url.Action("Form", "Home", new { name = form.FORM_TITLE })'">Go ></button>
+        <hr />
+    }
+</div>

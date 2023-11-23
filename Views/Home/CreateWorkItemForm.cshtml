@@ -1,27 +1,24 @@
-﻿@model WorkItemFields
-
-<link rel="stylesheet" href="~/css/site.css" />
+﻿@model Form
 
 <form asp-action="CreateWorkItem" method="post" class="work-item-form" enctype="multipart/form-data">
     <div class="logo-container">
         <img src="@Environment.GetEnvironmentVariable("COMPANY_LOGO")" alt="Company Logo" />
     </div>
 
-    <h2>@ViewData["FormTitle"]</h2>
-    <p>@ViewData["FormDescription"]</p>
+    <h2>@Model.FORM_TITLE</h2>
+    <p>@Model.FORM_DESCRIPTION<p>
+
+        <!-- Store the form title so we can look up which form we are submitting in the controller -->
+        <input type="hidden" name="FormTitle" value="@Model.FORM_TITLE" />
 
     @{
-        for (var i = 1; i < 15; i++)
+        foreach(var field in Model.FIELDS)
         {
-            var currentField = Model.AllFields["FIELD_" + i];
-            if (currentField != null)
-            {
-                @await Html.PartialAsync("_FormField", currentField)
-            }
+            @await Html.PartialAsync("_FormField", field);
         }
     }
 
-    @if (Model.EnableAttachments)
+    @if (Model.ENABLE_ATTACHMENTS)
     {
         <!-- Attachment container -->
         <div class="attachment-container">

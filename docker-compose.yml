@@ -6,33 +6,5 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      - AZURE_DEVOPS_PAT=
-      - AZURE_DEVOPS_ORG_URL=
-      - AZURE_DEVOPS_PROJECT=
-      - AREA_PATH=System.AreaPath
-      - COMPANY_LOGO=
-      - PAGE_TITLE=
-      - PAGE_BACKGROUND_COLOUR=#fa8700
-      - WORK_ITEM_TYPE=User Story
-      - FORM_TITLE=Bug Reporting Form
-      - DEFAULT_AREA_PATH=
-      - FORM_DESCRIPTION=Your queries will be recorded on the chase BAU Board where you can track the progress of your query
-      - WORKITEM_SUBMITTED_MESSAGE=Support Request Submitted Successfully!
-      - FIELD_1=Title,System.Title
-      - FIELD_2=Description,System.Description
-      - FIELD_3=Requester Name,Custom.RequesterName
-      - FIELD_4=Describe the Bug,System.Description
-      - FIELD_5=Steps to Reproduce,Custom.StepstoReproduce
-      - FIELD_6=Expected Outcome,Custom.ExpectedOutcome
-      - FIELD_7=Actual Outcome,Custom.ActualOutcome
-      - FIELD_8=Additional Comments,Custom.AdditionalComments      
-      - FIELD_9=Reproducibility,Custom.Reproducibility
-      - FIELD_10=System Area or Service,Custom.SystemAreaorService
-      - FIELD_11=Affected Feature or Area,Custom.AffectedfeatureorArea
-      - FIELD_12=Device Model or Browser,Custom.DeviceModelorBrowser
-      - FIELD_13=App Version or Browser,Custom.AppVersion
-      - FIELD_14=Operating System,Custom.OperatingSystem
-      - FIELD_15=Network Type,Custom.NetworkType
     ports:
       - "8080:80"

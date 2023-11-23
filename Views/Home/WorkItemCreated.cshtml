@@ -1,13 +1,14 @@
-﻿@model WorkItemFields
+﻿@using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+@model Configuration
 
 <link rel="stylesheet" href="~/css/site.css" />
 
 <div class="work-item-form">
     <div class="logo-container">
-        <img src="@Environment.GetEnvironmentVariable("COMPANY_LOGO")" alt="Company Logo" />
+        <img src="@Model.COMPANY_LOGO" alt="Company Logo" />
     </div>
 
-    <h2>@Environment.GetEnvironmentVariable("WORKITEM_SUBMITTED_MESSAGE")</h2>
+    <h2>@Model.SelectedForm.WORK_ITEM_SUBMITTED_MESSAGE</h2>
     <p>Work Item ID: @Model.CreatedWorkItem.Id</p>
 
     <button type="submit" class="btn btn-primary" onclick="window.location.href='@Url.Action("Index", "Home")'">Back</button>

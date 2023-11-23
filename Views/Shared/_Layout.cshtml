@@ -1,5 +1,5 @@
 ﻿@{
-    var backgroundColor = Environment.GetEnvironmentVariable("PAGE_BACKGROUND_COLOUR") ?? "#666";
+    var backgroundColor = ViewBag.BACKGROUND_COLOUR;
 }
 
 <!DOCTYPE html>
@@ -7,8 +7,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@Environment.GetEnvironmentVariable("PAGE_TITLE")</title>
-    
+    <title>@ViewBag.PAGE_TITLE</title>
+
     <!-- Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
@@ -28,7 +28,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 
     <!-- Bootstrap JS from CDN -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
 
@@ -44,6 +44,17 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row">
+
+                    @foreach (var form in ViewBag.FORMS)
+                    {
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Form" asp-route-name="@form.FORM_TITLE">@form.FORM_TITLE</a>
+                            </li>
+                        </ul>
+                    }
+                </div>
             </div>
         </nav>
     </header>

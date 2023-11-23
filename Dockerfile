@@ -27,33 +27,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# Set Azure DevOps environment variables
-ENV COMPANY_LOGO=""
-ENV AZURE_DEVOPS_PAT=""
-ENV AZURE_DEVOPS_ORG_URL=""
-ENV PAGE_BACKGROUND_COLOUR=#666
-ENV AZURE_DEVOPS_PROJECT=""
-ENV AREA_PATH: "System.AreaPath"
-ENV WORK_ITEM_TYPE="User Story"
-ENV FORM_TITLE="Create Work Item"
-ENV FORM_DESCRIPTION=""
-ENV DEFAULT_AREA_PATH=""
-ENV WORKITEM_SUBMITTED_MESSAGE="Support Request Submitted Successfully!"
-ENV FIELD_1: "Bug Title,System.Title"
-ENV FIELD_2: "Description,System.Description"
-ENV FIELD_3: ""
-ENV FIELD_4: ""
-ENV FIELD_5: ""
-ENV FIELD_6: ""
-ENV FIELD_7: ""
-ENV FIELD_8: ""
-ENV FIELD_9: ""
-ENV FIELD_10: ""
-ENV FIELD_11: ""
-ENV FIELD_12: ""
-ENV FIELD_13: ""
-ENV FIELD_14: ""
-ENV FIELD_15: ""
-ENV FIELD_16: ""
-
 ENTRYPOINT ["dotnet", "AzDoWorkItemForm.dll"]
