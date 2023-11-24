@@ -23,6 +23,7 @@ public class HomeController : Controller
         ViewBag.BACKGROUND_COLOUR = config.BACKGROUND_COLOUR;
         ViewBag.PAGE_TITLE = config.PAGE_TITLE;
         ViewBag.FORMS = config.Forms;
+        ViewBag.COMPANY_LOGO = config.COMPANY_LOGO;
 
         return View("Index", config.Forms);
     }
@@ -32,6 +33,7 @@ public class HomeController : Controller
         ViewBag.BACKGROUND_COLOUR = config.BACKGROUND_COLOUR;
         ViewBag.PAGE_TITLE = config.PAGE_TITLE;
         ViewBag.FORMS = config.Forms;
+        ViewBag.COMPANY_LOGO = config.COMPANY_LOGO;
 
         return View("CreateWorkItemForm", config.Forms.Single(f => f.FORM_TITLE.ToLowerInvariant() == name.ToLowerInvariant()));
     }
@@ -44,6 +46,7 @@ public class HomeController : Controller
         ViewBag.BACKGROUND_COLOUR = config.BACKGROUND_COLOUR;
         ViewBag.PAGE_TITLE = config.PAGE_TITLE;
         ViewBag.FORMS = config.Forms;
+        ViewBag.COMPANY_LOGO = config.COMPANY_LOGO;
 
         // Pull out the form we are working on so we can pick out some critical info for creating the ticket
         var originalForm = config.Forms.Single(f => f.FORM_TITLE.ToLowerInvariant() == form["FormTitle"].ToString().ToLowerInvariant());

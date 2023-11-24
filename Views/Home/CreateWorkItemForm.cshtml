@@ -2,7 +2,7 @@
 
 <form asp-action="CreateWorkItem" method="post" class="work-item-form" enctype="multipart/form-data">
     <div class="logo-container">
-        <img src="@Environment.GetEnvironmentVariable("COMPANY_LOGO")" alt="Company Logo" />
+        <img src="@ViewBag.COMPANY_LOGO" alt="Company Logo" />
     </div>
 
     <h2>@Model.FORM_TITLE</h2>

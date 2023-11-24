@@ -2,7 +2,7 @@
 
 <div class="work-item-form">
     <div class="logo-container">
-        <img src="@Environment.GetEnvironmentVariable("COMPANY_LOGO")" alt="Company Logo" />
+        <img src="@ViewBag.COMPANY_LOGO" alt="Company Logo" />
     </div>
 
     @foreach (var form in Model)
