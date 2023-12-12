@@ -55,7 +55,7 @@ namespace AzDoWorkItemForm
             {
                 Operation = Operation.Add,
                 Path = "/fields/System.AreaPath",
-                Value = Environment.GetEnvironmentVariable("DEFAULT_AREA_PATH")
+                Value = originalForm.DEFAULT_AREA_PATH
             });
 
             // Create the work item
