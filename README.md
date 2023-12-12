@@ -164,6 +164,44 @@ You will need to provide a configuration.json file, which you pass into the dock
 }
 ```
 
+## JSON Schema
+
+```
+{
+  "PAGE_TITLE": "",
+  "COMPANY_LOGO": "",
+  "BACKGROUND_COLOUR": "",
+  "AZURE_DEVOPS_ORG_URL": "",
+  "AZURE_DEVOPS_PAT": "",
+  "Forms": [
+    {
+      "FORM_TITLE": "",
+      "FORM_DESCRIPTION": "",
+      "AZURE_DEVOPS_PROJECT": "",
+      "WORK_ITEM_TYPE": "",
+      "DEFAULT_AREA_PATH": "",
+      "WORK_ITEM_SUBMITTED_MESSAGE": "",
+      "ENABLE_ATTACHMENTS": true,
+      "FIELDS": [
+        {
+          "Name": "",
+          "FieldName": ""
+        },
+        {
+          "Name": "",
+          "FieldName": "",
+          "Tips": [
+            {
+              "Option": "",
+              "TipText": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
 
 ## General Settings
 
