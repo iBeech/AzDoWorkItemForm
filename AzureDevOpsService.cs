@@ -64,12 +64,12 @@ namespace AzDoWorkItemForm
             var attachments = (List<IFormFile>)form.Files;
             if (attachments == null) return workItem;
             
-            await UploadAttachmentAsync(workItem, attachments);
+            await UploadAttachmentAsync(workItem, originalForm, attachments);
 
             return workItem;
         }
 
-        private async Task UploadAttachmentAsync(WorkItem workItem, List<IFormFile> attachments)
+        private async Task UploadAttachmentAsync(WorkItem workItem, Form originalForm, List<IFormFile> attachments)
         {
             // Upload attachments if available
             if (attachments != null && attachments.Count > 0)
@@ -77,7 +77,7 @@ namespace AzDoWorkItemForm
                 foreach (var attachment in attachments)
                 {
                     // Upload attachment and get the URL
-                    var attachmentUrl = await UploadAttachmentAsync(workItem.Id.Value, attachment);
+                    var attachmentUrl = await UploadAttachmentAsync(workItem.Id.Value, originalForm, attachment);
 
                     // Add the attachment URL to the work item description or a custom field
                     workItem.Fields["Custom.Attachment"] = attachmentUrl;
@@ -101,7 +101,7 @@ namespace AzDoWorkItemForm
             }
         }
 
-        private async Task<string?> UploadAttachmentAsync(int workItemId, IFormFile attachment)
+        private async Task<string?> UploadAttachmentAsync(int workItemId, Form originalForm, IFormFile attachment)
         {
             using (var client = new HttpClient())
             {
@@ -122,7 +122,7 @@ namespace AzDoWorkItemForm
 
                     // Escape and upload the attachement to Azure DevOps
                     var escapedFileName = Uri.EscapeDataString(attachment.FileName);
-                    var response = await client.PostAsync($"{_config.AZURE_DEVOPS_ORG_URL}/PROJECTHERE/_apis/wit/attachments?fileName={escapedFileName}&api-version=7.1", content);
+                    var response = await client.PostAsync($"{_config.AZURE_DEVOPS_ORG_URL}/{originalForm.AZURE_DEVOPS_PROJECT}/_apis/wit/attachments?fileName={escapedFileName}&api-version=7.1", content);
 
                     // Check for a successful response
                     response.EnsureSuccessStatusCode();
