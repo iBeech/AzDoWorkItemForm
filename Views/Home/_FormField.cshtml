@@ -32,6 +32,27 @@
                 }
             </select>
         }
+        else if (Model.AzDoField.AllowedValuesOnly)
+        {
+            // When the option changes, show any tips for the selected option
+            <select name="@Model.FieldName" required class="form-control" onchange="handleSelectChange('@Model.Name', this)">
+                <option value="">Select...</option>
+                @foreach (var option in Model.AzDoField.AllowedValues.allowedValues)
+                {
+                    var tip = (Model.Tips == null) ?
+                    null : // There are no tips for this option
+                    Model.Tips.FirstOrDefault(t => t.Option == option); // There are some tips, try to match a tip to this option
+                    if (tip == null) // If there is no tip, just write out the option
+                    {
+                        <option value="@option">@option</option>
+                    }
+                    else // If there is a tip, store it in data-tip
+                    {
+                        <option value="@option" data-tip=@Html.Encode(tip.TipText)>@option</option>
+                    }
+                }
+            </select>
+        }
         else if (Model.AzDoField.type == "string")
         {
             <input type="text" name="@Model.FieldName" required class="form-control">
