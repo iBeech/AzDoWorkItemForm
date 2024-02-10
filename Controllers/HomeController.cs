@@ -27,15 +27,38 @@ public class HomeController : Controller
 
         return View("Index", config.Forms);
     }
-    public IActionResult Form(string name)
+    public IActionResult Form(string name, string prefill, string areaPath)
     {
         var config = GetOrLoadConfiguration();
         ViewBag.BACKGROUND_COLOUR = config.BACKGROUND_COLOUR;
         ViewBag.PAGE_TITLE = config.PAGE_TITLE;
         ViewBag.FORMS = config.Forms;
         ViewBag.COMPANY_LOGO = config.COMPANY_LOGO;
+        
+        // Find the form requested
+        var foundForm = config.Forms.Single(f => f.FORM_TITLE.ToLowerInvariant() == name.ToLowerInvariant());
+        
+        // 
+        if (!string.IsNullOrEmpty(areaPath))
+        {
+            foundForm.DEFAULT_AREA_PATH = areaPath;
+        }
 
-        return View("CreateWorkItemForm", config.Forms.Single(f => f.FORM_TITLE.ToLowerInvariant() == name.ToLowerInvariant()));
+        // Check if there are any prefilled field values in the query string
+        if (!string.IsNullOrEmpty(prefill) && prefill.Contains(','))
+        {
+            var split = prefill.Split(',');
+            var PRESET_FIELDNAME = split[0];
+            var PRESET_FIELDVALUE = split[1];
+
+            // Search for the field
+            var fieldWithDefault = foundForm.FIELDS.SingleOrDefault(f => f.FieldName.Equals(PRESET_FIELDNAME, StringComparison.InvariantCultureIgnoreCase));
+
+            // If we found it, set its default value
+            if(fieldWithDefault != null) { fieldWithDefault.DefaultValue = PRESET_FIELDVALUE; }
+        }
+                
+        return View("CreateWorkItemForm", foundForm);
     }
 
     [HttpPost]

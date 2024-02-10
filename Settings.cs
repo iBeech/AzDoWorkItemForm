@@ -256,6 +256,8 @@ namespace AzDoWorkItemForm
     {
         public string Name { get; set; }
         public string FieldName { get; set; }
+        public string DefaultValue { get; set; } = string.Empty;
+        public bool Hidden { get; set; } = false;
         public string Description { get; set; }
         public List<Tip> Tips { get; set; }
         public AzureField AzDoField { get; set; }
