@@ -4,6 +4,11 @@ This project allows you to create dynamically generated form, based on the field
 
 Match one or more field names against a title in the docker environment variables. When the form loads, it queries Azure DevOps for the fields specified, if found it generates an appropraite HTML input. Single line text / Multi line text / multi select option.
 
+You can now override the default area path, or speicfy default options using the query string e.g.
+
+/Home/Form?name=MyForm&prefill=System.Title,My Default Title Text
+/Home/Form?name=MyForm&areaPath=Project\Area
+
 ### Home Page
 ![image](https://github.com/iBeech/AzDoWorkItemForm/assets/72153/acdc1208-b1c9-4cf1-8416-e35a618ed533)
 
@@ -109,7 +114,8 @@ You will need to provide a configuration.json file, which you pass into the dock
         },
         {
           "Name": "Network Type",
-          "FieldName": "Custom.NetworkType"
+          "FieldName": "Custom.NetworkType",
+          "Hidden": true
         }
       ]
     },
@@ -194,6 +200,7 @@ You will need to provide a configuration.json file, which you pass into the dock
             {
               "Option": "",
               "TipText": ""
+              "Hidden": 
             }
           ]
         }
@@ -234,6 +241,7 @@ You can configure 1 or more forms in your configuration.json. Doing so will allo
 | ------------------------ | -------------------------------------- |
 | **Name**                 | *Friendly name of the field for the form*      |
 | **FieldName**           | *Azure DevOps Field Name e.g. System.Title*            |
+| **Hidden**              | *When set to true, will hide this field from the form. Warning, you must set a default value by using the query string*
 
 #### Tips for Specific Fields
 

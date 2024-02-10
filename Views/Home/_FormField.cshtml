@@ -3,7 +3,8 @@
 
 @if (Model != null)
 {
-    <div class="form-group">
+    <div class="form-group" style="display:@(Model.Hidden ? "none" : "block")">
+
         <label for="@Model.FieldName">@Model.Name:<span class="required">*</span></label>
         @if (!string.IsNullOrEmpty(Model.Description))
         {
@@ -18,17 +19,16 @@
                 @foreach (var option in Model.AzDoField.Options.items)
                 {
                     var tip = (Model.Tips == null) ?
-                        null : // There are no tips for this option
-                        Model.Tips.FirstOrDefault(t => t.Option == option); // There are some tips, try to match a tip to this option
-                    if (tip == null) // If there is no tip, just write out the option
-                    {
-                        <option value="@option">@option</option>
-                    }
-                    else // If there is a tip, store it in data-tip
-                    {
-                        <option value="@option" data-tip=@Html.Encode(tip.TipText)>@option</option>
-                    }
+                    null : // There are no tips for this option
+                    Model.Tips.FirstOrDefault(t => t.Option == option); // There are some tips, try to match a tip to this option
 
+                    var isSelected = (option == Model.DefaultValue);
+
+                    // Build the option element as a string
+                    string optionElement = $"<option value=\"{option}\" {(isSelected ? "selected" : "")}>{option}</option>";
+
+                    // Write the option element as raw HTML
+                    @Html.Raw(optionElement)
                 }
             </select>
         }
@@ -55,11 +55,11 @@
         }
         else if (Model.AzDoField.type == "string")
         {
-            <input type="text" name="@Model.FieldName" required class="form-control">
+            <input type="text" name="@Model.FieldName" required class="form-control" value="@Model.DefaultValue" />
         }
         else if (Model.AzDoField.type == "html")
         {
-            <textarea name="@Model.FieldName" required class="form-control"></textarea>
+            <textarea name="@Model.FieldName" required class="form-control">@Model.DefaultValue</textarea>
         }
     </div>
 }
