@@ -242,6 +242,7 @@ namespace AzDoWorkItemForm
     {
         public string FORM_TITLE { get; set; }
         public string FORM_DESCRIPTION { get; set; }
+        public string ExpandedDescription => FORM_DESCRIPTION.Replace("[DEFAULT_AREA_PATH]", DEFAULT_AREA_PATH);
         public string AZURE_DEVOPS_PROJECT { get; set; }
         public string WORK_ITEM_TYPE { get; set; }
         public string DEFAULT_AREA_PATH { get; set; }
@@ -251,6 +252,7 @@ namespace AzDoWorkItemForm
         public string AZURE_PROCESS_ID { get; set; }
         public string WORK_ITEM_TYPE_REFERENCE_NAME { get; set; }
         public List<Field> FIELDS { get; set; }
+        public bool NAVIGATION_DISABLED { get; set; } = false;
     }
     public class Field
     {

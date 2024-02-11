@@ -34,10 +34,14 @@ public class HomeController : Controller
         ViewBag.PAGE_TITLE = config.PAGE_TITLE;
         ViewBag.FORMS = config.Forms;
         ViewBag.COMPANY_LOGO = config.COMPANY_LOGO;
-        
+
         // Find the form requested
         var foundForm = config.Forms.Single(f => f.FORM_TITLE.ToLowerInvariant() == name.ToLowerInvariant());
-        
+
+        // Define if the navigation menu should be disabled
+        // helpful for when sharing a customer facing form
+        ViewBag.NAVIGATION_DISABLED = foundForm.NAVIGATION_DISABLED;
+
         // 
         if (!string.IsNullOrEmpty(areaPath))
         {
@@ -73,6 +77,10 @@ public class HomeController : Controller
 
         // Pull out the form we are working on so we can pick out some critical info for creating the ticket
         var originalForm = config.Forms.Single(f => f.FORM_TITLE.ToLowerInvariant() == form["FormTitle"].ToString().ToLowerInvariant());
+
+        // Define if the navigation menu should be disabled
+        // helpful for when sharing a customer facing form
+        ViewBag.NAVIGATION_DISABLED = originalForm.NAVIGATION_DISABLED;
 
         var azureDevOpsService = new AzureDevOpsService(config);
 

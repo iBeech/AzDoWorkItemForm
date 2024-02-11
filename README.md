@@ -128,6 +128,7 @@ You will need to provide a configuration.json file, which you pass into the dock
       "DEFAULT_AREA_PATH": "Beech Family",
       "WORK_ITEM_SUBMITTED_MESSAGE": "Support Request Submitted Successfully!",
       "ENABLE_ATTACHMENTS": true,
+      "NAVIGATION_DISABLED": true,
       "FIELDS": [
         {
           "Name": "Title",
@@ -188,6 +189,7 @@ You will need to provide a configuration.json file, which you pass into the dock
       "DEFAULT_AREA_PATH": "",
       "WORK_ITEM_SUBMITTED_MESSAGE": "",
       "ENABLE_ATTACHMENTS": true,
+      "NAVIGATION_DISABLED": true",
       "FIELDS": [
         {
           "Name": "",
@@ -228,12 +230,13 @@ You can configure 1 or more forms in your configuration.json. Doing so will allo
 | Field                    | Description                            |
 | ------------------------ | -------------------------------------- |
 | **FORM_TITLE**           | *Your Form Title goes here*          |
-| **FORM_DESCRIPTION**     | *Description of the form*            |
+| **FORM_DESCRIPTION**     | *Description of the form. You can use the variable [DEFAULT_AREA_PATH] here, which will expand to the actual area path set; Useful for when setting the area path in the query string (URL).*            |
 | **AZURE_DEVOPS_PROJECT** | *Azure DevOps Project Name*          |
 | **WORK_ITEM_TYPE**       | *Work Item Type in Azure DevOps to create*                  |
 | **DEFAULT_AREA_PATH**    | *Default Area Path for Work Items*   |
 | **WORK_ITEM_SUBMITTED_MESSAGE** | *Success Message upon submission* |
 | **ENABLE_ATTACHMENTS**   | *If set to true will allow form submitters to submit files to their ticket*   |
+| **NAVIGATION_DISABLED** | *When set to true, will disable the auto generated navigation to other forms. Useful when linking a customer to a form* |
 
 #### Form Fields
 
