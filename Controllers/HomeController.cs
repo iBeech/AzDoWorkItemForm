@@ -66,6 +66,7 @@ public class HomeController : Controller
     }
 
     [HttpPost]
+    [RequestSizeLimit(int.MaxValue)]
     public async Task<IActionResult> CreateWorkItem(IFormCollection form)
     {
         var config = GetOrLoadConfiguration();
